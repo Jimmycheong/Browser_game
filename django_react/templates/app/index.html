@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %} 
+
+{% block head %}
+<title>Django-React Home</title>
+{% endblock %}
+
+{% block body %}
+<h2>TV Shows</h2>
+
+<!-- <img src="{% static 'mr_robot.jpg' %}"/> -->
+
+<div id="component"></div>
+
+<script type="text/babel" src="{% static 'js/index.js' %}"></script>
+{% endblock %}

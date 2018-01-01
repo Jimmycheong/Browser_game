@@ -5,12 +5,12 @@ class GameSessionSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = GameSession
-        fields = ('title',)
+        fields = ('title', "status",)
 
 class PlayerSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Player
-        fields = ('name', "status")
+        fields = ('name', "status",)
 
     

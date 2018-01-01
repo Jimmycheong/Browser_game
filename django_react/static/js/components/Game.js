@@ -1,4 +1,10 @@
-class GameBox extends React.Component {
+const GameMatcher = ({ match }) => ( 
+    <div>
+        <Game session={match.params.title}/>
+    </div>
+)
+
+class Game extends React.Component {
 
     constructor(props){
         super(props)
@@ -11,7 +17,8 @@ class GameBox extends React.Component {
         var this_ = this
         console.log("Sending off requests for players..")
 
-        $.get('http://127.0.0.1:8000/api/games/' + this.props.gameSession, function (data, status) {
+        $.get('http://127.0.0.1:8000/api/games/' + this.props.session, function (data, status) {
+            console.log("response: ", data)            
             this_.setState({players: data})
         })
     }
@@ -34,7 +41,6 @@ class GameBox extends React.Component {
         }
 
 
-
         return(
 
             <div>
@@ -46,6 +52,7 @@ class GameBox extends React.Component {
                         {playerBoxes}
                     </div>
                     <div className="col s7">
+                        <p>QuestBox:</p>
                         <QuestBox />
                     </div>
                 </div>

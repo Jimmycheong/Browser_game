@@ -2,15 +2,18 @@
 {% load static %} 
 
 {% block head %}
-<title>Django-React Home</title>
+<title>Browser-based Resistance</title>
 {% endblock %}
 
 {% block body %}
-<h2>TV Shows</h2>
-
 <!-- <img src="{% static 'mr_robot.jpg' %}"/> -->
 
 <div id="component"></div>
 
-<script type="text/babel" src="{% static 'js/index.js' %}"></script>
+<!-- <script type="text/babel" src="{% static 'js/index.js' %}"></script> -->
+
+<script type="text/babel" src="{% static 'js/components/GameLobby.js' %}"></script>
+<script type="text/babel" src="{% static 'js/components/Lobby.js' %}"></script>
+<script type="text/babel" src="{% static 'js/components/Main.js' %}"></script>
+
 {% endblock %}

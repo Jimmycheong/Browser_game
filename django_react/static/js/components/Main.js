@@ -24,14 +24,6 @@ class App extends React.Component {
             <div>
                 <Lobby joinGame={this.joinGame} />
             </div>
-            
-            // Render GameBox
-            // <div>            
-            //     <div>
-            //     <GameBox gameSession={"game-empty"}/>
-            //     </div>
-            // </div>
-
         )
     }
 }
@@ -42,7 +34,7 @@ class RouteMap extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" component={App} />
-          <Route path="/games/:slug" component={GameLobbyMatcher}/>
+          <Route path="/lobby/:title" component={GameLobbyMatcher}/>
           <Route path="*" component={NotFound}/>
         </Switch>
       </div>

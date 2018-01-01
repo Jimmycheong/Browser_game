@@ -27,7 +27,7 @@ class Lobby extends React.Component {
 
 		var existingGames = this.state.games.map(function(object, index){
 
-			var reference = "/games/" + object.title
+			var reference = "/lobby/" + object.title
 
 			return(
 				<div key={index}>				

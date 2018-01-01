@@ -1,3 +1,7 @@
+const GameLobbyMatcher = ({ match }) => ( 
+ 	<GameBox gameSession={match}/>
+)
+
 class GameLobby extends React.Component {
 	constructor(){
 		super()

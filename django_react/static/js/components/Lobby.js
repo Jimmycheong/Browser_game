@@ -27,12 +27,14 @@ class Lobby extends React.Component {
 
 		var existingGames = this.state.games.map(function(object, index){
 
-			var reference = "http://127.0.0.1:8000/api/games/" + object.title
+			var reference = "/games/" + object.title
 
 			return(
 				<div key={index}>				
 					<ul>
-						<li><a href={reference}>{object.title}</a></li>					
+						<Link to={reference}>
+							<li>{object.title}</li>					
+						</Link>
 					</ul>
 				</div>
 			)

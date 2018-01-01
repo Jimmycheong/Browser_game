@@ -1,4 +1,10 @@
-class Component extends React.Component {
+var HashRouter = ReactRouterDOM.HashRouter;
+var Route = ReactRouterDOM.Route;
+var Link = ReactRouterDOM.Link;
+var Switch = ReactRouterDOM.Switch;
+var IndexRoute = ReactRouter.IndexRoute;
+
+class App extends React.Component {
 
     constructor (){
         super()
@@ -14,17 +20,10 @@ class Component extends React.Component {
     }
 
     render() {
-
-        var screen = null 
-
-        if (! this.state.joined_game) {
-            screen = <Lobby joinGame={this.joinGame} />
-        } else {
-            screen = <GameLobby />
-        }
-
         return (
-            <div>{screen}</div>
+            <div>
+                <Lobby joinGame={this.joinGame} />
+            </div>
             
             // Render GameBox
             // <div>            
@@ -37,7 +36,24 @@ class Component extends React.Component {
     }
 }
 
+class RouteMap extends React.Component {
+  render(){
+    return(
+      <div>
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route path="/games/:slug" component={GameLobbyMatcher}/>
+          <Route path="*" component={NotFound}/>
+        </Switch>
+      </div>
+    )
+  }
+}
+
+
 ReactDOM.render(
-    <Component />,
-    document.getElementById('component')
+  <HashRouter>
+    <RouteMap />
+  </HashRouter>,
+  document.getElementById('component')
 )

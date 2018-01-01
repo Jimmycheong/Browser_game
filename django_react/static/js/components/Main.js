@@ -26,6 +26,13 @@ class Component extends React.Component {
         return (
             <div>{screen}</div>
             
+            // Render GameBox
+            // <div>            
+            //     <div>
+            //     <GameBox gameSession={"game-empty"}/>
+            //     </div>
+            // </div>
+
         )
     }
 }

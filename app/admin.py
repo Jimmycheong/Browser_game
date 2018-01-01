@@ -1,7 +1,11 @@
 from django.contrib import admin
-from .models import TVShow
+from .models import GameSession, Player
 
-class TVShowAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'seasons', 'episodes', 'release_date']
+class GameSessionAdmin(admin.ModelAdmin):
+    list_display = ['title']
 
-admin.site.register(TVShow, TVShowAdmin)
+class PlayerAdmin(admin.ModelAdmin):
+    list_display = ['name', 'game_session']
+
+admin.site.register(GameSession, GameSessionAdmin)
+admin.site.register(Player, PlayerAdmin)

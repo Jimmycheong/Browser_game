@@ -53,6 +53,17 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
+CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "asgi_redis.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [(redis_host, 6379)]
+            },
+            "ROUTING": "app.routing.websocket_routing",
+        },
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

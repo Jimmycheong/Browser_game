@@ -5,7 +5,7 @@ class GameSessionAdmin(admin.ModelAdmin):
     list_display = ['title', "get_status_display"]
 
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ['name', 'game_session', "get_status_display"]
+    list_display = ['name', 'game_session', "get_status_display", "player_session_id"]
 
 admin.site.register(GameSession, GameSessionAdmin)
 admin.site.register(Player, PlayerAdmin)

@@ -9,3 +9,4 @@ class GameSessionAPI(APIView):
         all_games = GameSession.objects.all()
         serializer = GameSessionSerializer(all_games, many=True)
         return Response(serializer.data)
+    

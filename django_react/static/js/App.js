@@ -9,7 +9,7 @@ class RouteMap extends React.Component {
     return(
       <div>
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={TopLevel} />
           <Route path="/lobby/:title" component={LobbyMatcher}/>
           <Route path="/game/:title" component={GameMatcher}/>
           <Route path="*" component={NotFound}/>

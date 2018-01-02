@@ -1,6 +1,10 @@
-from django.db import models
+'''
+Model.py 
+'''
 
-# Create your models here.
+from django.db import models
+from django.db.models.signals import post_save
+from .consumers import ws_update_existing_games
 
 PLAYER_STATUS_CHOICES = (
     ('standby', 'Waiting in Lobby'),
@@ -25,13 +29,29 @@ class GameSession(models.Model):
         ordering = ['-created']
 
 class Player(models.Model):
+
     game_session = models.ForeignKey(GameSession, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100, blank=True)
     status = models.CharField(max_length=100, choices=PLAYER_STATUS_CHOICES, default="standby")
+    player_session_id = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return "%s" % (self.name)
 
     class Meta:
-        ordering = ['created']
+        ordering = ['-created']
+
+
+'''
+Signals
+'''
+
+def broadcastGames(sender, instance, **kwargs):
+    from .serializers import GameSessionSerializer
+    all_games = sender.objects.all()
+    serialized_games = GameSessionSerializer(all_games, many=True)
+    ws_update_existing_games(serialized_games.data)
+    print("Data sent over via websocket..")
+
+post_save.connect(broadcastGames, sender=GameSession)

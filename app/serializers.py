@@ -1,16 +1,19 @@
 from rest_framework import serializers
-from .models import GameSession, Player
+from django.apps import apps 
+
+model_game_session =apps.get_model(app_label="app", model_name="GameSession")
+model_player =apps.get_model(app_label="app", model_name="Player")
 
 class GameSessionSerializer(serializers.ModelSerializer):
 
     class Meta: 
-        model = GameSession
+        model = model_game_session
         fields = ('title', "status",)
 
 class PlayerSerializer(serializers.ModelSerializer):
 
     class Meta: 
-        model = Player
+        model = model_player
         fields = ('name', "status",)
 
     

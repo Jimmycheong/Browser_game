@@ -60,7 +60,7 @@ CHANNEL_LAYERS = {
             "CONFIG": {
                 "hosts": [(redis_host, 6379)]
             },
-            "ROUTING": "app.routing.websocket_routing",
+            "ROUTING": "django_react.routing.websocket_routing",
         },
 }
 

@@ -3,7 +3,8 @@ class Home extends React.Component {
 	constructor(props){
 		super(props)
 		this.state = {
-			games: []
+			games: [],
+			player_name: null
 		}
 		this.joinGame = this.joinGame.bind(this)
 	}
@@ -13,6 +14,38 @@ class Home extends React.Component {
         $.get('http://127.0.0.1:8000/api/games', function (data, status) {
             this_.setState({games: data})
         })
+
+     // TODO: Check cookies for player name. 
+     // If player name exists, set this as the state
+     // If it does not, generate a new one and ask them to change it
+
+     var player_name = getCookie("player_name")
+     console.log("player name is: " + player_name)
+     if (getCookie("player_name") == undefined) {
+     		setCookie("player_name", "spaceboys", 1)
+     }
+		this.setState({player_name: getCookie("player_name")})	
+	}
+
+	componentDidMount(){
+		var this_ = this
+
+		var socket = new WebSocket("ws://" + window.location.host + "/games/")
+
+		socket.onopen = function open(){
+			console.log("Websocket connection for games has been created")
+		}
+
+		socket.onmessage = function message(event){
+			var raw_data = JSON.parse(event.data)
+			this_.setState({games:raw_data})
+		}
+
+		if (socket.readyState == WebSocket.OPEN) {
+        socket.onopen();
+        console.log("StreamInfo websocket connection created")
+    }
+
 	}
 
 	joinGame(){
@@ -39,6 +72,9 @@ class Home extends React.Component {
 
 		return(
 			<div>
+
+				<h4>Player name: {this.state.player_name}</h4>
+
 				<div className="row">
 					<div className="col s4">
 						<h3>Join a Game .. </h3>

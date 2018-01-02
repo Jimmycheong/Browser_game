@@ -10,8 +10,8 @@ def index(request):
     '''
     Set cookies only if no previous cookie was set
     '''
-    if "game_session_id" not in request.COOKIES:
+    if "player_session_id" not in request.COOKIES:
         print("New user. Updating cookie")
-        response.set_cookie("game_session_id", generate_session_id())
+        response.set_cookie("player_session_id", generate_session_id())
 
     return response 

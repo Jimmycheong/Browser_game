@@ -26,3 +26,13 @@ Create the database locally using this command:
 Finally, to run the project server: 
 
 ```python manage.py runserver```
+
+## Redis
+
+Install redis on your local machine, for OSX users, type the following in your terminal
+
+```brew install redis```
+
+Start up the service by typing: 
+
+```brew services start redis```

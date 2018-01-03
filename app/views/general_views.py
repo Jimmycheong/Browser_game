@@ -5,7 +5,7 @@ from ..methods import generate_session_id
 
 def index(request):
 
-    response = render(request, 'app/index.html', {})
+    response = render(request, 'base.html', {})
 
     '''
     Set cookies only if no previous cookie was set

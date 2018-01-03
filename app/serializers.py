@@ -8,12 +8,12 @@ class GameSessionSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = model_game_session
-        fields = ('title', "status",)
+        fields = ('id','title', "status",)
 
 class PlayerSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = model_player
-        fields = ('name', "status",)
+        fields = ('game_session', 'name', "status",)
 
     

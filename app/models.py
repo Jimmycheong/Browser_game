@@ -6,15 +6,15 @@ from django.db import models
 from django.db.models.signals import post_save
 from .consumers import ws_update_existing_games
 
+GAME_SESSION_STATUS_CHOICES = (
+    ('standby', 'Awaiting players'),
+    ('in_game', 'Game in progress'),
+)
+
 PLAYER_STATUS_CHOICES = (
     ('standby', 'Waiting in Lobby'),
     ('ready', "Ready in Lobby"),
     ('in_game', 'Currently in Game'),
-)
-
-GAME_SESSION_STATUS_CHOICES = (
-    ('standby', 'Awaiting players'),
-    ('in_game', 'Game in progress'),
 )
 
 class GameSession(models.Model):

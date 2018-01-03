@@ -23,5 +23,4 @@ var listedGames = {
 var chatBox = {
     width: "100%",
     height: "300px",
-    border: "1px solid"
 }

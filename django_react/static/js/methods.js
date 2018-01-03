@@ -10,3 +10,12 @@ function setCookie(cname, cvalue, exdays) {
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
+
+/*
+Counts the number of players that are ready
+*/
+function countReadyPlayers(playerArray){
+	return playerArray.map(function(object, index){
+			return (object.status == "ready") ? 1 : 0;
+		}).reduce((a, b) => a + b, 0)
+}

@@ -3,15 +3,17 @@ from rest_framework.views import APIView
 from ..models import GameSession, Player
 from ..serializers import PlayerSerializer
 from rest_framework.response import Response
-from ..methods import get_or_none
+from ..methods import (
+    get_or_none, 
+    send_updated_player_info_via_websockets
+)
 
 from ..consumers import ws_update_existing_players
 
 class PlayerAPI(APIView):
 
     def get(self, request, game_title):
-
-        print("Request params: ", request.GET.get("player_session_id"))
+        print("Request params:{}={}".format("player_session_id", request.GET.get("player_session_id")))
         joined = False
 
         try:
@@ -23,17 +25,25 @@ class PlayerAPI(APIView):
         game_players = Player.objects.filter(game_session=session.id)
         serializer = PlayerSerializer(game_players, many=True)
 
-        joined_player = get_or_none(Player, player_session_id=request.GET.get("player_session_id"))
+        joined_player = get_or_none(
+            Player, 
+            player_session_id=request.GET.get("player_session_id"),
+            game_session=session
+        )
 
         if joined_player in game_players:
             joined = True
 
-        data = json.dumps({
-                "players": serializer.data,
-                "joined": joined
-            })
+        data = {
+            "joined": joined,
+            "players": serializer.data,
+            "game_session_id": session.id
+        }
 
-        return Response(data)
+        if joined_player != None:
+            data['playerStatus'] = joined_player.status
+
+        return Response(json.dumps(data))
 
     def post(self, request, game_title):
 
@@ -49,14 +59,32 @@ class PlayerAPI(APIView):
         
         else:
             Player.objects.get(
-                player_session_id=request.data['player_session_id']
+                player_session_id=request.data['player_session_id'],
+                game_session=session
             ).delete()
             response = Response("Left game: {}".format(game_title))
 
         # Sent info via websockets
-        print("Sending web sockets")            
-        game_players = Player.objects.filter(game_session=session.id)
-        serializered_players = PlayerSerializer(game_players, many=True)
-        ws_update_existing_players(serializered_players.data)
-
+        send_updated_player_info_via_websockets(session.id)
         return response
+
+    def put(self, request, game_title):
+        session = GameSession.objects.get(title=game_title)
+        obj = Player.objects.get(
+            player_session_id=request.GET.get('player_session_id')
+        )
+        if request.data['isReady'] is False: 
+            obj.status = "ready"
+            obj.save()
+            response = Response("Player {} is ready!".format(obj.name))
+
+        else:
+            obj.status = "standby"
+            obj.save()
+            response = Response("Player {} is not ready.".format(obj.name))
+
+        # Sent info via websockets
+        send_updated_player_info_via_websockets(session.id)
+        return response
+
+

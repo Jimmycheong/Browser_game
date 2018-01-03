@@ -19,7 +19,8 @@ class Game extends React.Component {
 
         $.get('http://127.0.0.1:8000/api/games/' + this.props.session, function (data, status) {
             console.log("response: ", data)            
-            this_.setState({players: data})
+            var json_data = JSON.parse(data)
+            this_.setState({players: json_data['players']})
         })
     }
 
@@ -44,16 +45,20 @@ class Game extends React.Component {
         return(
 
             <div>
+                <Link to="/">
+                    <button className="btn">&lt; Home</button>
+                </Link>
                 <h4>This is the gamebox</h4>
-
                 <div className="row">
-                    <div className="col s5">
+                    <div className="col s3">
                         <p>Player boxs: </p>
-                        {playerBoxes}
+                        <PlayerTable players={this.state.players}/>
                     </div>
                     <div className="col s7">
                         <p>QuestBox:</p>
                         <QuestBox />
+                    </div>
+                    <div className="col s2">
                     </div>
                 </div>
 

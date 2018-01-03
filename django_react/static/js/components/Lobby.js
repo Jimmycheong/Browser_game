@@ -14,7 +14,8 @@ class Lobby extends React.Component {
 			players: [],
 			joined: false,
 			player_session_id: null,
-			player_name: null
+			player_name: null,
+			game_session_id: null
 		}
 		this.toggleReady = this.toggleReady.bind(this)
 		this.toggleJoin = this.toggleJoin.bind(this)
@@ -28,15 +29,23 @@ class Lobby extends React.Component {
     $.get(request_url, function (data, status) {
     	var json_data = JSON.parse(data)
     	console.log(json_data)
-        this_.setState({
-        	players: json_data['players'],
-        	joined: json_data['joined'],
-        })
+      this_.setState({
+      	players: json_data['players'],
+      	joined: json_data['joined'],
+      	game_session_id: json_data['game_session_id']
+      })
+
+      // If browser player has joined, their status from the json data. 
+      if (json_data['joined']) {
+      	this_.setState({ready:json_data['playerStatus']})
+      }
+
     })
 
-    this.setState({ player_session_id : player_session_id })
-    this.setState({player_name:getCookie("player_name")})
-
+    this.setState({ 
+    	player_session_id : player_session_id,
+    	player_name:getCookie("player_name")
+    })
 	}
 
 	componentDidMount(){
@@ -49,130 +58,76 @@ class Lobby extends React.Component {
 
 		socket.onmessage = function message(event){
 			var raw_data = JSON.parse(event.data)
-			this_.setState({players:raw_data})
+			if (raw_data['game_session_id'] == this_.state.game_session_id){
+				this_.setState({players:raw_data['players']})
+			}			
 		}
-
 
 	}
 
-
-	toggleReady(){
+	toggleReady(){		
+		var put_url = 'http://127.0.0.1:8000/api/games/'+this.props.title+"?player_session_id="+getCookie("player_session_id")			
 		this.setState({ready: !this.state.ready})
+		if (this.state.joined) {
+			axios.put(put_url, {
+				isReady: this.state.ready
+			})
+			.then(function(response){
+				console.log("Successful PUT request")
+				console.log(response)
+			})
+		} 
 	}
 
 	toggleJoin(){
+
 		this.setState({joined:!this.state.joined})
+    axios.post('http://127.0.0.1:8000/api/games/'+this.props.title, {
+    	action: (!this.state.joined) ? "join" : "leave", 
+    	player_session_id: this.state.player_session_id,
+    	player_name: this.state.player_name
+    })
+    .then(function(response){
+    	console.log(response)
+    })
 
-		if(!this.state.joined){
-        axios.post('http://127.0.0.1:8000/api/games/'+this.props.title, {
-        	action: "join",
-        	player_session_id: this.state.player_session_id,
-        	player_name: this.state.player_name
-        })
-        .then(function(response){
-        	console.log(response)
-        })
-		} else {
-			axios.post('http://127.0.0.1:8000/api/games/'+this.props.title, {
-					action: "leave",
-        	player_session_id: this.state.player_session_id,
-        	player_name: this.state.player_name
-        })
-        .then(function(response){
-        	console.log(response)
-        })
-		}
-
+    // Change component's ready state to false if player has left the game.
+    if (!this.state.joined) {
+    	this.setState({ready:false})
+    }
 	}
 
 	render(){
 
-		var joinLeaveButton = createJoinLeaveButton(this)
-		var readyButton = createReadyButton(this)
-
-		// Operability of start game button
+		// Buttons
+		var readyButton = null
 		var startGameButton = null
-		var count = this.state.players.map(function(object, index){
-			return (object.status == "ready") ? 1 : 0;
-		}).reduce((a, b) => a + b, 0)
+		var joinLeaveButton = createJoinLeaveButton(this)
 
-		if (count != this.state.players.length) {
-			startGameButton = <button className="btn disabled">Start Game</button>
-		} else {
-			startGameButton = <button className="btn"> Start Game</button>
+		// Display ready and startGame buttons only if a player has joined
+		if (this.state.joined) {
+			var readyButton = createReadyButton(this)
+			var startGameButton = createStartGameButton(countReadyPlayers(this.state.players), this.state.players.length)
 		}
 
-		// Table of player and their respective statuses 
-		var playerList = null
-        if (this.state.players.length > 0) {
-			var playerList = this.state.players.map(function (object, index){
-			var playerRow = null
-
-			if (object.status == "standby") {
-				playerRow = (
-					<tr style={standbyStatus} key={index}>
-						<td>{object.name}</td>
-						<td>Standby</td>
-					</tr>
-				)
-			} else if (object.status == "ready") {
-				playerRow = (
-					<tr style={readyStatus} key={index}>
-						<td>{object.name}</td>
-						<td>Ready!</td>
-					</tr>
-				)
-			} else {
-				playerRow = (
-					<tr key={index}>
-						<td>{object.name}</td>
-						<td>Unknown</td>
-					</tr>
-				)
-			}
-
-			return playerRow
-			
-			})
-
-        } else {
-            playerList = (
-            	<tr>
-            		<td>Awaiting players to join..</td>
-            		<td></td>
-            	</tr> 
-            )          
-        }
-
 		return (
-			<div>
+			<div className="container">
 				<Link to="/">
-				<p>&lt; Back to Lobby</p>
+					<button className="btn light-blue darken-1">&lt; Home</button>
 				</Link>
 				<h4>Welcome to session: {this.props.title}</h4>
 				<p>This is the Game lobby where places can join</p>
 				{joinLeaveButton}
 				<div className="row">
 					<div className="col s4">
-						<table className="bordered">
-					        <thead>
-					          <tr>
-					              <th>Name</th>
-					              <th>Status</th>
-					          </tr>
-					        </thead>
-
-					        <tbody>
-					          {playerList}
-					        </tbody>
-					     </table>
+						<PlayerTable players={this.state.players}/>
 					</div>
 
-				<div className="col s6">
+				<div className="col s8">
 					{readyButton}
 					{startGameButton}
 					<br/><br/>
-					<div style={chatBox}>
+					<div style={chatBox} className="card-panel">
 						<p>Text box for client chat</p>
 					</div>
 					<br/><br/>
@@ -181,7 +136,7 @@ class Lobby extends React.Component {
 							<input type="text" />
 						</div>
 						<div className="col s4">					
-							<input type="submit" className="btn"/>
+							<input type="submit" className="btn light-blue darken-1"/>
 						</div>
 					</div>
 				</div>

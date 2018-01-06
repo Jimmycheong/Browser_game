@@ -19,3 +19,21 @@ function countReadyPlayers(playerArray){
 			return (object.status == "ready") ? 1 : 0;
 		}).reduce((a, b) => a + b, 0)
 }
+
+/*
+Check if everyone in the lobby is ready
+*/
+function checkEveryoneIsReady(players) {
+  return (countReadyPlayers(players) > 5) ? true : false
+}
+
+/*
+Updates all players when its possible to start the game or not
+*/
+function updateGameReadyStatus(component, data_players){
+  if (checkEveryoneIsReady(data_players) && data_players.length > 5) {
+    component.setState({everyoneReady:true})
+  } else {
+    component.setState({everyoneReady:false})
+  }
+}

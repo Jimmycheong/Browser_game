@@ -1,7 +1,9 @@
 // Button to join and leave a game
 
 function createJoinLeaveButton(component){
-	if (!component.state.joined) {
+	if (component.state.players.length > 5 && !component.state.joined) {
+		return <button className="btn gray lighten-1" disabled>Game Full</button>
+	} else if (!component.state.joined) {
 		return <button className="btn green lighten-1" onClick={component.toggleJoin}>Join</button>
 	} else {
 		return <button className="btn red lighten-1" onClick={component.toggleJoin}>Leave</button>
@@ -17,10 +19,14 @@ function createReadyButton(component){
 		}
 }
 
-function createStartGameButton(readyCount, playerCount) {
-			if (readyCount != playerCount) {
+function createStartGameButton(component) {
+			if (!component.state.everyoneReady) {
 			return <button className="btn disabled">Start Game</button>
 		} else {
 			return <button className="btn"> Start Game</button>
 		}
+}
+
+function createNewGameButton(component){
+	return <button className="btn orange lighten-2" >New Game +</button>
 }

@@ -15,14 +15,14 @@ class PlayerAPI(APIView):
     def get(self, request, game_title):
         print("Request params:{}={}".format("player_session_id", request.GET.get("player_session_id")))
         joined = False
-
+        
         try:
             session = GameSession.objects.get(title=game_title)
         except:
             session = None  
             return Response("Cannot find game")
             
-        game_players = Player.objects.filter(game_session=session.id)
+        game_players = Player.objects.filter(game_session=session.id)        
         serializer = PlayerSerializer(game_players, many=True)
 
         joined_player = get_or_none(
@@ -37,7 +37,7 @@ class PlayerAPI(APIView):
         data = {
             "joined": joined,
             "players": serializer.data,
-            "game_session_id": session.id
+            "game_session_id": session.id,
         }
 
         if joined_player != None:
@@ -71,7 +71,8 @@ class PlayerAPI(APIView):
     def put(self, request, game_title):
         session = GameSession.objects.get(title=game_title)
         obj = Player.objects.get(
-            player_session_id=request.GET.get('player_session_id')
+            player_session_id=request.GET.get('player_session_id'),
+            game_session=session
         )
         if request.data['isReady'] is False: 
             obj.status = "ready"

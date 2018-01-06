@@ -15,6 +15,7 @@ class RouteMap extends React.Component {
           <Route path="/lobby/:title" component={LobbyMatcher}/>
           <Route path="/game/:title" component={GameMatcher}/>
           <Route path="/settings" component={Settings}/>
+          <Route path="/new_game" component={NewGame}/>
           <Route path="*" component={NotFound}/>
         </Switch>
       </div>

@@ -5,3 +5,12 @@
 .nameOnCard {
 	font-size: 20px;
 }
+
+.inputError {
+	color : red;
+}
+
+.homePlayerName{
+	font-size: 18px;
+	border-bottom: 1px solid black;
+}

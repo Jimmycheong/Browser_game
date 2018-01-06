@@ -46,12 +46,18 @@ class Home extends React.Component {
 
 	}
 
+	startNewGame(){
+		console.log("Starting new game, switch components")
+	}
+
 	joinGame(){
 		console.log("Sending HTTP request to join game")
 		console.log("Joined game successfully")
 	}
 
 	render(){
+
+		var newGameButton = createNewGameButton()
 
 		var existingGames = this.state.games.map(function(object, index){
 			// var reference = "/lobby/" + object.title
@@ -70,10 +76,19 @@ class Home extends React.Component {
 
 		return(
 			<div className="container">
-				<h4>Player name: {this.state.player_name}</h4>
+				<div className="row">
+					<div className="col s8">
+						<p className="homePlayerName">Welcome:{this.state.player_name}</p>
+					</div>
+					<div className="col s4">
+						<Link to="/new_game">
+							{newGameButton}
+						</Link>
+					</div>
+				</div>
 				<div className="row">
 					<div className="col s4">
-						<h3>Join a Game .. </h3>
+						<h3>Join a Game</h3>
 						<p>Enter the game code to join</p>
 						<input className="input-field" type="text"/> 
 						<input className="class=waves-effect waves-light btn light-blue darken-1" type="submit" onClick={this.joinGame}/>

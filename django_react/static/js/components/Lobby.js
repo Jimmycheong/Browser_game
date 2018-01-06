@@ -32,20 +32,26 @@ class Lobby extends React.Component {
       this_.setState({
       	players: json_data['players'],
       	joined: json_data['joined'],
-      	game_session_id: json_data['game_session_id']
+      	game_session_id: json_data['game_session_id'],
       })
 
       // If browser player has joined, their status from the json data. 
       if (json_data['joined']) {
-      	this_.setState({ready:json_data['playerStatus']})
+      	console.log("layer 1")
+      	if (json_data['playerStatus'] == 'ready'){
+      		console.log("layer 2")
+	      	this_.setState({ready:true})    		
+      	}
       }
 
+      updateGameReadyStatus(this_, json_data['players'])
     })
 
     this.setState({ 
     	player_session_id : player_session_id,
     	player_name:getCookie("player_name")
     })
+
 	}
 
 	componentDidMount(){
@@ -60,23 +66,11 @@ class Lobby extends React.Component {
 			var raw_data = JSON.parse(event.data)
 			if (raw_data['game_session_id'] == this_.state.game_session_id){
 				this_.setState({players:raw_data['players']})
+
+				updateGameReadyStatus(this_, raw_data['players'])
 			}			
 		}
 
-	}
-
-	toggleReady(){		
-		var put_url = 'http://127.0.0.1:8000/api/games/'+this.props.title+"?player_session_id="+getCookie("player_session_id")			
-		this.setState({ready: !this.state.ready})
-		if (this.state.joined) {
-			axios.put(put_url, {
-				isReady: this.state.ready
-			})
-			.then(function(response){
-				console.log("Successful PUT request")
-				console.log(response)
-			})
-		} 
 	}
 
 	toggleJoin(){
@@ -97,6 +91,20 @@ class Lobby extends React.Component {
     }
 	}
 
+	toggleReady(){		
+		var put_url = 'http://127.0.0.1:8000/api/games/'+this.props.title+"?player_session_id="+getCookie("player_session_id")			
+		this.setState({ready: !this.state.ready})
+		if (this.state.joined) {
+			axios.put(put_url, {
+				isReady: this.state.ready
+			})
+			.then(function(response){
+				console.log("Successful PUT request")
+				console.log(response)
+			})
+		} 
+	}
+
 	render(){
 
 		// Buttons
@@ -107,7 +115,7 @@ class Lobby extends React.Component {
 		// Display ready and startGame buttons only if a player has joined
 		if (this.state.joined) {
 			var readyButton = createReadyButton(this)
-			var startGameButton = createStartGameButton(countReadyPlayers(this.state.players), this.state.players.length)
+			var startGameButton = createStartGameButton(this)
 		}
 
 		return (
@@ -115,7 +123,14 @@ class Lobby extends React.Component {
 				<Link to="/">
 					<button className="btn light-blue darken-1">&lt; Home</button>
 				</Link>
-				<h4>Welcome to session: {this.props.title}</h4>
+				<div className="row">
+					<div className="col s10">
+						<h4>Welcome to session: {this.props.title}</h4>				
+					</div>
+					<div className="col s2">
+						<h5>Players: {this.state.players.length}/6</h5>
+					</div>
+				</div>
 				<p>This is the Game lobby where places can join</p>
 				{joinLeaveButton}
 				<div className="row">

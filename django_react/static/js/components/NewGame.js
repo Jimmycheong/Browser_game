@@ -33,15 +33,16 @@ class NewGame extends React.Component {
 
 		return (
 			<div className="container">
-			<br />
+				<br />
 				<Link to="/">
 					<button className="btn light-blue darken-1">&lt; Home</button>
 				</Link>
+				<br/>
 				<h4>Create a New game</h4>
 				<p>Players: 6</p>
 				{inputErrorMsg}
 				<input id="gameNameInput" placeholder="Enter a new for the game"className="input-field" type="text" ref={(input) => {this.textInput=input}}/> 
-				<button className="class=waves-effect waves-light btn light-blue darken-1" onClick={this.createNewGame}>Create</button>
+				<button className="class=waves-effect waves-light btn green darken-1" onClick={this.createNewGame}>Create</button>
 
 			</div>
 		)

@@ -28,5 +28,5 @@ function createStartGameButton(component) {
 }
 
 function createNewGameButton(component){
-	return <button className="btn orange lighten-2" >New Game +</button>
+    return <button className="btn amber darken-3" >New Game +</button>
 }

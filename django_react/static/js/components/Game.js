@@ -44,7 +44,7 @@ class Game extends React.Component {
 
         return(
 
-            <div>
+            <div className="gameContainer container">
                 <Link to="/">
                     <button className="btn">&lt; Home</button>
                 </Link>
@@ -54,7 +54,7 @@ class Game extends React.Component {
                         <p>Player boxs: </p>
                         <PlayerTable players={this.state.players}/>
                     </div>
-                    <div className="col s7">
+                    <div className="col s9">
                         <p>QuestBox:</p>
                         <QuestBox />
                     </div>

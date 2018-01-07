@@ -2,6 +2,11 @@
 	font-size:18px;
 }
 
+.narbarTitle{
+		/*padding-left:25px !important;*/
+    margin: 0px;
+}
+
 .nameOnCard {
 	font-size: 20px;
 }
@@ -13,4 +18,8 @@
 .homePlayerName{
 	font-size: 18px;
 	border-bottom: 1px solid black;
+}
+
+.gameContainer{
+	width:95% !important;
 }

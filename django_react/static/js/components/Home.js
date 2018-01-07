@@ -1,6 +1,6 @@
 class Home extends React.Component {
 
-	constructor(props){
+	constructor(props) {
 		super(props)
 		this.state = {
 			games: [],
@@ -9,7 +9,7 @@ class Home extends React.Component {
 		this.joinGame = this.joinGame.bind(this)
 	}
 
-	componentWillMount(){
+	componentWillMount() {
 
 		var this_ = this 
    	var player_name = getCookie("player_name")
@@ -25,7 +25,7 @@ class Home extends React.Component {
 		this.setState({player_name: getCookie("player_name")})	
 	}
 
-	componentDidMount(){
+	componentDidMount() {
 		var this_ = this
 
 		var socket = new WebSocket("ws://" + window.location.host + "/games/")
@@ -46,16 +46,16 @@ class Home extends React.Component {
 
 	}
 
-	startNewGame(){
+	startNewGame() {
 		console.log("Starting new game, switch components")
 	}
 
-	joinGame(){
+	joinGame() {
 		console.log("Sending HTTP request to join game")
 		console.log("Joined game successfully")
 	}
 
-	render(){
+	render() {
 
 		var newGameButton = createNewGameButton()
 

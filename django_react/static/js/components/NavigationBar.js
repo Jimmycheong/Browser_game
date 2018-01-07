@@ -10,7 +10,7 @@ class NavigationBar extends React.Component {
 	      <div className="nav-wrapper light-blue darken-1">
 	      	<Link to="/">
 	      		<p className="narbarTitle brand-logo">
-	      			<i class="large material-icons home">home</i>
+	      			<i className="large material-icons home">home</i>
 	      			A Browser Game</p>
 	      	</Link>
 	        <ul id="nav-mobile" className="right">

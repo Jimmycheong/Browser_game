@@ -12,24 +12,25 @@ class NewGame extends React.Component {
 	createNewGame(){
 		var this_ = this
 		if (this.textInput.value && this.textInput.value.length > 0) {
-	
 			axios.post("http://"+window.location.host+"/api/games/new", {
-				"gameName": this.textInput.value
+				gameName: this.textInput.value
 			})			
 			.then(function(response){
 				this_.props.history.push("/")
 			})
 			.catch(function(error){
+				console.log("Error!!")
 				this_.setState({error: error.response.data})
 			})
 		} else {
 			this.setState({error: "Please enter a name for this game"})
 		}
+
 	}
 
 	render(){
 
-		var inputErrorMsg = <label className="inputError" htmlFor="gameNameInput">{this.state.error}</label>
+		var inputErrorMsg = <p className="inputError" htmlFor="gameNameInput">{this.state.error}</p>
 
 		return (
 			<div className="container">

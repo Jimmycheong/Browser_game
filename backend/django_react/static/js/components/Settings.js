@@ -21,7 +21,7 @@ class Settings extends React.Component {
 		this.setState({editMode: !this.state.editMode})
 	}
 
-	changeName(){
+	changeName() {
 
 		if (this.textInput.value.length > 0) {
 			var this_ = this
